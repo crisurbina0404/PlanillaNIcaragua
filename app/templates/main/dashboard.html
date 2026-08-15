@@ -1,0 +1,114 @@
+{% extends "main_layout.html" %}
+{% block title %}Menu principal &middot; Planilla Nicaragua{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Bienvenido, {{ current_user.full_name }}</h1>
+    <p class="muted">Gestiona tus empleados y revisa el calculo de su salario.</p>
+  </div>
+  <a href="{{ url_for('registrar_empleado') }}" class="btn-primary">
+    <span class="btn-ico">+</span> Registrar empleado
+  </a>
+</div>
+
+<section class="stats-grid">
+  <div class="stat-card fade-up" style="--delay: 0">
+    <div class="stat-ico violet">&#129202;</div>
+    <div>
+      <div class="stat-num">{{ resumen.count }}</div>
+      <div class="stat-lbl">Empleados</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 1">
+    <div class="stat-ico blue">&#128176;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(resumen.total_bruto) }}</div>
+      <div class="stat-lbl">Salario bruto total</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 2">
+    <div class="stat-ico teal">&#128313;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(resumen.total_descuentos) }}</div>
+      <div class="stat-lbl">Descuentos totales</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 3">
+    <div class="stat-ico green">&#128181;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(resumen.total_neto) }}</div>
+      <div class="stat-lbl">Salario neto total</div>
+    </div>
+  </div>
+</section>
+
+<section class="card table-card fade-up" style="--delay: 4">
+  <div class="card-head">
+    <h2>Empleados registrados</h2>
+    <div class="card-actions">
+      <input type="search" id="empSearch" placeholder="Buscar..." class="search-input" />
+    </div>
+  </div>
+
+  {% if empleados %}
+  <div class="table-scroll">
+    <table id="empTable" class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombres</th>
+          <th>Salario bruto</th>
+          <th>INSS</th>
+          <th class="hide-sm">IR mensual</th>
+          <th>Descuentos</th>
+          <th>Salario neto</th>
+          <th class="hide-sm">Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in empleados %}
+        <tr data-name="{{ e.nombres|lower }}">
+          <td>{{ e.id }}</td>
+          <td class="cell-strong">{{ e.nombres }}</td>
+          <td>C${{ "%.2f"|format(e.salario_bruto) }}</td>
+          <td>C${{ "%.2f"|format(e.inss) }}</td>
+          <td class="hide-sm">C${{ "%.2f"|format(e.ir_mensual) }} <small class="badge">IR {{ "%g"|format(e.ir_pct) }}%</small></td>
+          <td>C${{ "%.2f"|format(e.total_descuentos) }}</td>
+          <td class="cell-positive">C${{ "%.2f"|format(e.salario_neto) }}</td>
+          <td class="hide-sm muted small">{{ e.created_at[:10] }}</td>
+          <td class="cell-actions">
+            <a href="{{ url_for('detalle_empleado', employee_id=e.id) }}" class="btn-link">Ver detalle</a>
+            <form method="POST" action="{{ url_for('eliminar_empleado', employee_id=e.id) }}"
+                  onsubmit="return confirm('Eliminar al empleado {{ e.nombres|e }}?');" style="display:inline;">
+              <button type="submit" class="btn-link danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-ico">&#129489;&zwj;&#128188;</div>
+    <h3>Sin empleados registrados</h3>
+    <p class="muted">Empieza registrando a tu primer empleado.</p>
+    <a href="{{ url_for('registrar_empleado') }}" class="btn-primary">+ Nuevo empleado</a>
+  </div>
+  {% endif %}
+</section>
+
+{% if empleados %}
+<section class="card chart-card fade-up" style="--delay: 5">
+  <div class="card-head"><h2>Distribucion global de salarios</h2></div>
+  <div class="chart-grid">
+    <div class="chart-box"><canvas id="netoChart"></canvas></div>
+    <div class="chart-box"><canvas id="brutoNetoChart"></canvas></div>
+  </div>
+</section>
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,120 @@
+/* ===============================================================
+   Layout de autenticacion (login / register)
+   Panel lateral con grafico + tarjeta con formulario.
+   =============================================================== */
+
+.auth-body { background: var(--bg); }
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+.auth-graphic {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ms-purple) 0%, var(--ms-blue) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 60px;
+}
+.auth-graphic.secondary { background: linear-gradient(135deg, var(--ms-teal) 0%, var(--ms-blue) 60%, var(--ms-purple) 100%); }
+
+.auth-graphic-content { position: relative; z-index: 2; max-width: 480px; }
+.auth-graphic-content h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  color: #fff;
+  margin: 18px 0;
+}
+.auth-graphic-content p { font-size: 1.1rem; opacity: .9; }
+
+.logo-circle {
+  width: 64px;
+  height: 64px;
+  background: rgba(255,255,255,.15);
+  border: 2px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.auth-graphic-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.auth-graphic-shapes span {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  animation: float 6s ease-in-out infinite;
+}
+.auth-graphic-shapes span:nth-child(1) { width: 240px; height: 240px; top: -60px; right: -60px; animation-delay: 0s; }
+.auth-graphic-shapes span:nth-child(2) { width: 160px; height: 160px; bottom: 40px; left: -40px; animation-delay: 1s; }
+.auth-graphic-shapes span:nth-child(3) { width: 110px; height: 110px; bottom: 10%; right: 20%; animation-delay: 2s; }
+.auth-graphic-shapes span:nth-child(4) { width: 60px; height: 60px; top: 30%; left: 30%; animation-delay: 3s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-18px); }
+}
+
+.auth-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--bg);
+}
+
+.auth-card-inner {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  padding: 36px 32px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  animation: cardIn .5s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(.97) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.auth-header { text-align: center; margin-bottom: 22px; }
+.auth-header h2 { font-size: 1.6rem; margin-bottom: 6px; }
+.auth-header p  { color: var(--text-muted); }
+
+.auth-form .field { text-align: left; }
+
+.auth-footer {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .92rem;
+}
+.auth-footer a { font-weight: 600; }
+
+.hint-bubble {
+  margin-top: 18px;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: .85rem;
+  color: var(--text-soft);
+}
+
+@media (max-width: 900px) {
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-graphic { display: none; }
+}

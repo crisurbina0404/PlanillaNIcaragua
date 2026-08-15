@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesion &middot; Planilla Nicaragua{% endblock %}
+{% block body_class %}auth-body{% endblock %}
+
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-graphic">
+    <div class="auth-graphic-content">
+      <div class="logo-circle">&para;</div>
+      <h1>Planilla<br/>Nicaragua</h1>
+      <p>Gestion de salarios, INSS e IR<br/>con calculo en tiempo real.</p>
+    </div>
+    <div class="auth-graphic-shapes">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-card-inner">
+      <div class="auth-header">
+        <h2>Iniciar sesion</h2>
+        <p>Accede a tu cuenta para empezar.</p>
+      </div>
+
+      {% if errors.form %}
+        <div class="alert alert-error">
+          {{ errors.form[0] }}
+        </div>
+      {% endif %}
+
+      <form method="POST" autocomplete="off" class="auth-form" id="loginForm">
+        <div class="field">
+          <label for="username">Usuario</label>
+          <input type="text" id="username" name="username" value="{{ form.username if form else '' }}"
+                 placeholder="admin" autocomplete="username" />
+          {% if errors.username %}
+            <span class="error">{{ errors.username[0] }}</span>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <label for="password">Contrasena</label>
+          <div class="password-field">
+            <input type="password" id="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" />
+            <button type="button" class="show-pass" data-target="password" aria-label="Mostrar contrasena">&#128065;</button>
+          </div>
+          {% if errors.password %}
+            <span class="error">{{ errors.password[0] }}</span>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn-primary btn-block">
+          Entrar
+          <span class="btn-ripple"></span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        No tienes cuenta?
+        <a href="{{ url_for('register') }}">Registrate aqui</a>
+      </div>
+
+      <div class="hint-bubble">
+        <strong>Cuenta demo:</strong> admin / admin123
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

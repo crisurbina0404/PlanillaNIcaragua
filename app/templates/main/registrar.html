@@ -1,0 +1,66 @@
+{% extends "main_layout.html" %}
+{% block title %}Registrar empleado &middot; Planilla Nicaragua{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Registrar empleado</h1>
+    <p class="muted">Ingresa los nombres y el salario. Veras el calculo en tiempo real.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn-ghost">&larr; Volver</a>
+</div>
+
+<div class="form-detail-grid">
+  <section class="card fade-up">
+    <div class="card-head"><h2>Datos del empleado</h2></div>
+
+    {% if errors.form %}
+      <div class="alert alert-error">{{ errors.form[0] }}</div>
+    {% endif %}
+
+    <form method="POST" autocomplete="off" id="empForm" novalidate>
+      <div class="field">
+        <label for="nombres">Nombres completos</label>
+        <input type="text" id="nombres" name="nombres" value="{{ form.nombres if form else '' }}"
+               placeholder="Ej: Maria Jose Lopez" />
+        <span class="error live-error" data-error-for="nombres">
+          {% if errors.nombres %}{{ errors.nombres[0] }}{% endif %}
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="salario_bruto">Salario bruto mensual (C$)</label>
+        <input type="number" id="salario_bruto" name="salario_bruto" step="0.01" min="0"
+               value="{{ form.salario_bruto if form else '' }}"
+               placeholder="Ej: 25000.00" />
+        <span class="error live-error" data-error-for="salario_bruto">
+          {% if errors.salario_bruto %}{{ errors.salario_bruto[0] }}{% endif %}
+        </span>
+      </div>
+
+      <button type="submit" class="btn-primary btn-block">
+        Calcular y guardar
+        <span class="btn-ripple"></span>
+      </button>
+    </form>
+  </section>
+
+  <section class="card calc-card fade-up" style="--delay: 1">
+    <div class="card-head"><h2>Calculo en tiempo real</h2></div>
+    <div id="calcResult" class="calc-result empty">
+      <div class="calc-placeholder">
+        <div class="empty-ico">&#129518;</div>
+        <p class="muted">Escribe un salario valido para ver el desglose.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/registrar.js') }}"></script>
+{% if calculo %}
+<script>
+  window.__PREV_CALC = {{ calculo|tojson if calculo else 'null' }};
+</script>
+{% endif %}
+{% endblock %}

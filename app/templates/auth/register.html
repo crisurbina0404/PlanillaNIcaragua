@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta &middot; Planilla Nicaragua{% endblock %}
+{% block body_class %}auth-body{% endblock %}
+
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-graphic secondary">
+    <div class="auth-graphic-content">
+      <div class="logo-circle">&para;</div>
+      <h1>Crear cuenta</h1>
+      <p>Registro interactivo con validacion<br/>en tiempo real.</p>
+    </div>
+    <div class="auth-graphic-shapes">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-card-inner">
+      <div class="auth-header">
+        <h2>Registrarse</h2>
+        <p>Crea tu cuenta. Te avisaremos al instante si algo es invalido.</p>
+      </div>
+
+      {% if errors.form %}
+        <div class="alert alert-error">{{ errors.form[0] }}</div>
+      {% endif %}
+
+      <form method="POST" autocomplete="off" class="auth-form" id="registerForm" novalidate>
+        <div class="field">
+          <label for="full_name">Nombre completo</label>
+          <input type="text" id="full_name" name="full_name" value="{{ form.full_name if form else '' }}"
+                 placeholder="Juan Perez" autocomplete="name" />
+          <span class="error" data-error-for="full_name">
+            {% if errors.full_name %}{{ errors.full_name[0] }}{% endif %}
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="username">Usuario</label>
+          <input type="text" id="username" name="username" value="{{ form.username if form else '' }}"
+                 placeholder="juanperez" autocomplete="username" />
+          <span class="error" data-error-for="username">
+            {% if errors.username %}{{ errors.username[0] }}{% endif %}
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="email">Correo electronico</label>
+          <input type="email" id="email" name="email" value="{{ form.email if form else '' }}"
+                 placeholder="juan@correo.com" autocomplete="email" />
+          <span class="error" data-error-for="email">
+            {% if errors.email %}{{ errors.email[0] }}{% endif %}
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="password">Contrasena</label>
+          <div class="password-field">
+            <input type="password" id="password" name="password"
+                   placeholder="Minimo 8 caracteres" autocomplete="new-password" />
+            <button type="button" class="show-pass" data-target="password" aria-label="Mostrar contrasena">&#128065;</button>
+          </div>
+          <div class="strength-bar" id="strengthBar"></div>
+          <span class="error live-error" data-error-for="password">
+            {% if errors.password %}{{ errors.password[0] }}{% endif %}
+          </span>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" id="submitBtn">
+          Crear cuenta
+          <span class="btn-ripple"></span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Ya tienes cuenta?
+        <a href="{{ url_for('login') }}">Inicia sesion</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}

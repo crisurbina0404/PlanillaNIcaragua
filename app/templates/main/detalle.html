@@ -1,0 +1,100 @@
+{% extends "main_layout.html" %}
+{% block title %}Detalle &middot; {{ emp.nombres }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ emp.nombres }}</h1>
+    <p class="muted">Calculo de salario aplicando la ley tributaria de Nicaragua.</p>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn-ghost">&larr; Volver al menu</a>
+</div>
+
+<section class="stats-grid">
+  <div class="stat-card fade-up" style="--delay: 0">
+    <div class="stat-ico blue">&#128176;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(emp.salario_bruto) }}</div>
+      <div class="stat-lbl">Salario bruto</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 1">
+    <div class="stat-ico teal">&#128313;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(emp.total_descuentos) }}</div>
+      <div class="stat-lbl">Total descuentos</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 2">
+    <div class="stat-ico green">&#128181;</div>
+    <div>
+      <div class="stat-num">C${{ "%.2f"|format(emp.salario_neto) }}</div>
+      <div class="stat-lbl">Salario neto</div>
+    </div>
+  </div>
+  <div class="stat-card fade-up" style="--delay: 3">
+    <div class="stat-ico violet">&#128200;</div>
+    <div>
+      <div class="stat-num">{{ "%g"|format(emp.ir_pct) }}%</div>
+      <div class="stat-lbl">Tarifa IR anual aplicada</div>
+    </div>
+  </div>
+</section>
+
+<div class="detail-grid">
+  <section class="card fade-up" style="--delay: 4">
+    <div class="card-head"><h2>Tabla de detalle</h2></div>
+    <table class="data-table detail-table">
+      <tbody>
+        <tr><td>Nombres</td><td class="cell-strong">{{ emp.nombres }}</td></tr>
+        <tr><td>Salario bruto mensual</td><td>C${{ "%.2f"|format(emp.salario_bruto) }}</td></tr>
+        <tr>
+          <td>INSS (7%)</td>
+          <td>-C${{ "%.2f"|format(emp.inss) }} <small class="badge">Seguro social</small></td>
+        </tr>
+        <tr><td>Renta neta mensual</td><td>C${{ "%.2f"|format(emp.renta_neta_mensual) }}</td></tr>
+        <tr><td>Renta neta anual</td><td>C${{ "%.2f"|format(emp.renta_anual) }}</td></tr>
+        <tr>
+          <td>IR anual</td>
+          <td>C${{ "%.2f"|format(emp.ir_anual) }} <small class="badge">Tarifa {{ "%g"|format(emp.ir_pct) }}%</small></td>
+        </tr>
+        <tr><td>IR mensual</td><td>-C${{ "%.2f"|format(emp.ir_mensual) }}</td></tr>
+        <tr class="row-total">
+          <td>Total descuentos</td>
+          <td>-C${{ "%.2f"|format(emp.total_descuentos) }}</td>
+        </tr>
+        <tr class="row-positive">
+          <td>Salario neto mensual</td>
+          <td class="cell-positive cell-strong">C${{ "%.2f"|format(emp.salario_neto) }}</td>
+        </tr>
+        <tr class="muted"><td>Fecha de registro</td><td class="small">{{ emp.created_at }}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="chart-stack">
+    <section class="card fade-up" style="--delay: 5">
+      <div class="card-head"><h2>Distribucion del salario</h2></div>
+      <div class="chart-box"><canvas id="distChart"></canvas></div>
+    </section>
+
+    <section class="card fade-up" style="--delay: 6">
+      <div class="card-head"><h2>Comparativa</h2></div>
+      <div class="chart-box"><canvas id="compChart"></canvas></div>
+    </section>
+  </div>
+</div>
+
+<script>
+  window.__DATA__ = {
+    bruto:     {{ emp.salario_bruto|tojson }},
+    inss:      {{ emp.inss|tojson }},
+    ir:        {{ emp.ir_mensual|tojson }},
+    neto:      {{ emp.salario_neto|tojson }},
+    irAnual:   {{ emp.ir_anual|tojson }},
+    rentaAnual:{{ emp.renta_anual|tojson }},
+    irPct:     {{ emp.ir_pct|tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='js/detalle.js') }}"></script>
+{% endblock %}
